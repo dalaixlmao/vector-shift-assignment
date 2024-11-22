@@ -10,7 +10,7 @@ function App() {
    async function onClick(){
     console.log("Nodes = ",nodes);
     console.log("Edges = ",edges);
-    const res = await axios.post("http://127.0.0.1:8000/pipelines/parse", {nodes, edges});
+    const res = await axios.post("https://vector-shift-assignment-7v8l.vercel.app/pipelines/parse", {nodes, edges});
     console.log(res.data);
   }
   return (
