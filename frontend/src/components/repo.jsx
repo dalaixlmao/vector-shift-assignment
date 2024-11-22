@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Position } from "reactflow";
 import Node from "./node";
-import { Handle } from "reactflow";
 
 export const SearchNode = ({ id, data }) => {
   const [query, setQuery] = useState(data?.query || "");
@@ -27,8 +26,12 @@ export const SearchNode = ({ id, data }) => {
 };
 
 export const TranslationNode = ({ id, data }) => {
-  const [sourceLanguage, setSourceLanguage] = useState(data?.sourceLanguage || "English");
-  const [targetLanguage, setTargetLanguage] = useState(data?.targetLanguage || "Spanish");
+  const [sourceLanguage, setSourceLanguage] = useState(
+    data?.sourceLanguage || "English"
+  );
+  const [targetLanguage, setTargetLanguage] = useState(
+    data?.targetLanguage || "Spanish"
+  );
   return (
     <Node
       id={id}
@@ -115,7 +118,9 @@ export const DataVisualizationNode = ({ id, data }) => {
 };
 
 export const AIAssistantNode = ({ id, data }) => {
-  const [assistantType, setAssistantType] = useState(data?.assistantType || "General");
+  const [assistantType, setAssistantType] = useState(
+    data?.assistantType || "General"
+  );
   return (
     <Node
       id={id}
@@ -140,7 +145,9 @@ export const AIAssistantNode = ({ id, data }) => {
 };
 
 export const InputNode = ({ id, data }) => {
-  const [inputName, setInputName] = useState(data?.inputName || id.replace("customInput-", "input_"));
+  const [inputName, setInputName] = useState(
+    data?.inputName || id.replace("customInput-", "input_")
+  );
   const [inputType, setInputType] = useState(data?.inputType || "Text");
 
   return (
@@ -175,8 +182,18 @@ export const LLMNode = ({ id, data }) => {
       type="llm"
       title="LLM"
       handles={[
-        { type: "target", position: Position.Left, suffix: "system", style: { top: "33%" } },
-        { type: "target", position: Position.Left, suffix: "prompt", style: { top: "66%" } },
+        {
+          type: "target",
+          position: Position.Left,
+          suffix: "system",
+          style: { top: "33%" },
+        },
+        {
+          type: "target",
+          position: Position.Left,
+          suffix: "prompt",
+          style: { top: "66%" },
+        },
         { type: "source", position: Position.Right, suffix: "response" },
       ]}
       fields={[
@@ -192,7 +209,9 @@ export const LLMNode = ({ id, data }) => {
 };
 
 export const OutputNode = ({ id, data }) => {
-  const [outputName, setOutputName] = useState(data?.outputName || id.replace("customOutput-", "output_"));
+  const [outputName, setOutputName] = useState(
+    data?.outputName || id.replace("customOutput-", "output_")
+  );
   const [outputType, setOutputType] = useState(data?.outputType || "Text");
 
   return (
@@ -224,18 +243,17 @@ export const TextNode = ({ id, data }) => {
   const [text, setText] = useState(data.text || "");
   const [handles, setHandles] = useState([]);
   const [dimensions, setDimensions] = useState({ width: 200, height: 50 });
-
-  // Function to dynamically resize the TextNode
   const updateDimensions = (newText) => {
     const lines = newText.split("\n").length;
-    const longestLine = Math.max(...newText.split("\n").map((line) => line.length));
+    const longestLine = Math.max(
+      ...newText.split("\n").map((line) => line.length)
+    );
     setDimensions({
-      width: Math.max(200, longestLine * 8), // Adjust width based on characters
-      height: Math.max(50, lines * 20), // Adjust height based on lines
+      width: Math.max(200, longestLine * 8), 
+      height: Math.max(50, lines * 20), 
     });
   };
 
-  // Function to extract variables in {{variable}} format
   const extractVariables = (input) => {
     const regex = /{{\s*([a-zA-Z_$][a-zA-Z_$0-9]*)\s*}}/g;
     const variables = [];
@@ -246,59 +264,31 @@ export const TextNode = ({ id, data }) => {
     return variables;
   };
 
-  // Update handles whenever text changes
   useEffect(() => {
     const variables = extractVariables(text);
-    const uniqueHandles = [...new Set(variables)]; // Avoid duplicates
+    const uniqueHandles = [...new Set(variables)]; 
     setHandles(uniqueHandles);
     updateDimensions(text);
   }, [text]);
 
   return (
-    <div
-    >
-      {/* {handles.map((variable, index) => (
-        <Handle
-          key={index}
-          type="target"
-          position={Position.Left}
-          id={`handle-${variable}`}
-          style={{
-            top: `${(index + 1) * 30}px`,
-            background: "#8b5cf6",
-            borderRadius: "50%",
-          }}
-        />
-      ))}
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter your text here..."
-        style={{
-          width: "100%",
-          height: "100%",
-          background: "transparent",
-          border: "none",
-          outline: "none",
-          resize: "none",
-          fontSize: "14px",
-        }}
-      /> */}
-
-<Node 
-    id={id}
-    type={'text'}
-    title= {'Text'}
-    handles= {handles.map((h, index)=>{return {type:"target", position:Position.Left, suffix:"value"}})}
-    fields={[{
-      label:"Enter the text",
-      type: "textarea",
-      defaultValue:"Enter the text",
-      onChange:(e)=>{setText(e.target.value)}
-    }]}
+    <Node
+      id={id}
+      type={"text"}
+      title={"Text"}
+      handles={handles.map((h, index) => {
+        return { type: "target", position: Position.Left, suffix: "value" };
+      })}
+      fields={[
+        {
+          label: "Enter the text",
+          type: "textarea",
+          defaultValue: "Enter the text",
+          onChange: (e) => {
+            setText(e.target.value);
+          },
+        },
+      ]}
     />
-    </div>
   );
 };
-
-
