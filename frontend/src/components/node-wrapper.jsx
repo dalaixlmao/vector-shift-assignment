@@ -30,9 +30,9 @@ export default function NodeWrapper({
   };
   return (
     <div
-      className={`text-white bg-violet-900 relative flex flex-col gap-2 pt-2 rounded-lg h-full`}
+      className={`text-white border-x border-y-2 border-y-violet-900 border-x-violet-500 bg-violet-900 relative flex flex-col gap-2 pt-2 rounded-xl h-full`}
     >
-      <div className="px-2 font-medium pb-1">
+      <div className="px-2 font-medium">
         {title || type}
       </div>
       <div className="text-sm py-2 font-light h-full rounded-lg px-4 pb-4 bg-violet-950">
