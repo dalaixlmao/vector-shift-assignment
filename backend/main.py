@@ -7,6 +7,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "https://vector-shift-assignment-mu.vercel.app"
 ]
 
 app.add_middleware(
