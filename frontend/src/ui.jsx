@@ -1,23 +1,25 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "./store";
-import { shallow } from "zustand/shallow";
-import { InputNode } from "./nodes/inputNode";
-import { LLMNode } from "./nodes/llmNode";
-import { OutputNode } from "./nodes/outputNode";
-import { TextNode } from "./nodes/textNode";
-import { ConnectionLineType, BackgroundVariant } from "reactflow";
-import "reactflow/dist/style.css";
 import {
   SearchNode,
   TranslationNode,
   CodeGenerationNode,
   DataVisualizationNode,
   AIAssistantNode,
+  LLMNode,
+  InputNode,
+  TextNode,
+  OutputNode
 } from "./components/repo";
+import "reactflow/dist/style.css";
+import { ConnectionLineType, BackgroundVariant } from "reactflow";
 
-// Define custom node types
 const nodeTypes = {
+  input: InputNode,
+  llm: LLMNode,
+  text: TextNode,
+  output: OutputNode,
   search: SearchNode,
   translation: TranslationNode,
   "code-generation": CodeGenerationNode,
@@ -30,14 +32,10 @@ export const PipelineUI = ({ setNodes, setEdges }) => {
 
   useEffect(() => {
     setNodes(
-      nodes.map((n) => {
-        return n.id;
-      })
+      nodes.map((node) => node.id)
     );
     setEdges(
-      edges.map((e) => {
-        return [e.source, e.target];
-      })
+      edges.map((edge) => [edge.source, edge.target])
     );
   }, [nodes, edges, setNodes, setEdges]);
 
@@ -50,7 +48,7 @@ export const PipelineUI = ({ setNodes, setEdges }) => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
-        connectionLineType={ConnectionLineType.Straight}
+        connectionLineType={ConnectionLineType.SmoothStep}
       >
         <Controls />
         <Background color="#f4f4f4" variant={BackgroundVariant.Dots} />
@@ -60,8 +58,18 @@ export const PipelineUI = ({ setNodes, setEdges }) => {
 };
 
 export function Input({ type, options, onChange, defaultValue, label }) {
-  console.log(options);
-  if (type == "dropdown") {
+  const handleTextareaResize = (e) => {
+    const textarea = e.target;
+    textarea.style.height = "auto";
+    textarea.style.width = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    const lines = textarea.value.split("\n");
+    const longestLine = Math.max(...lines.map((line) => line.length));
+    const charWidth = 7.5; 
+    textarea.style.width = `${Math.max(200, longestLine * charWidth)}px`;
+  };
+
+  if (type === "dropdown") {
     return (
       <div>
         <label className="block text-sm font-medium">{label}</label>
@@ -70,43 +78,49 @@ export function Input({ type, options, onChange, defaultValue, label }) {
           onChange={onChange}
           className="mt-2 py-1 bg-white/10 text-sm placeholder:text-white/30 w-full rounded-md"
         >
-          {options.map((o, index) => {
-            return (
-              <option key={index} className="text-black">
-                {o}
-              </option>
-            );
-          })}
+          {options.map((option, index) => (
+            <option key={index} className="text-black">
+              {option}
+            </option>
+          ))}
         </select>
       </div>
     );
-  } else if (type == "text") {
+  }
+
+  if (type === "textarea") {
     return (
-      <div>
+      <div className="min-h-12 min-w-12">
         <label className="block text-sm font-medium">{label}</label>
-        <input
+        <textarea
           placeholder={defaultValue}
-          onChange={onChange}
-          type="text"
-          className="mt-2 py-1 bg-white/10 px-2 text-sm placeholder:text-white/30 w-full rounded-md"
+          onChange={(e) => {
+            onChange(e);
+            handleTextareaResize(e);
+          }}
+          onInput={handleTextareaResize}
+          className="mt-2 py-1 max-h-48 max-w-48 border border-transparent bg-white/10 px-2 text-sm placeholder:text-white/30 w-full rounded-md"
+          rows={1} 
+          style={{
+            resize: "none",
+            overflow: "hidden",
+            height: "auto",
+            width: "200px",
+          }}
         />
       </div>
     );
-  } else if (type == "file") {
+  }
+
+  return (
     <div>
       <label className="block text-sm font-medium">{label}</label>
       <input
+        type={type}
         placeholder={defaultValue}
         onChange={onChange}
-        type="text"
         className="mt-2 py-1 bg-white/10 px-2 text-sm placeholder:text-white/30 w-full rounded-md"
       />
-    </div>;
-  } else {
-    return (
-      <div className="rounded-full px-3 py-2 bg-red-700/50 backdrop-blur text-white">
-        Recheck input type
-      </div>
-    );
-  }
+    </div>
+  );
 }

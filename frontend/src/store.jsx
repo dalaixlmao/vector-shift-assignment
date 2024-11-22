@@ -1,36 +1,22 @@
 import { create } from "zustand";
-import {
-  addEdge,
-  applyNodeChanges,
-  applyEdgeChanges,
-  ConnectionLineType,
-} from "reactflow";
-
-// Initial nodes configuration
-const initialNodes = [];
-
-// Initial edges configuration
+import { addEdge, applyNodeChanges, applyEdgeChanges } from "reactflow";
 
 export const useStore = create((set, get) => ({
-  // Nodes and edges state
   nodes: [],
   edges: [],
 
-  // Update nodes
   onNodesChange: (changes) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
     });
   },
 
-  // Update edges
   onEdgesChange: (changes) => {
     set({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
 
-  // Add new edge
   onConnect: (params) => {
     set({
       edges: addEdge(
@@ -38,13 +24,13 @@ export const useStore = create((set, get) => ({
           ...params,
           type: "smoothstep",
           animated: true,
+          color: "#8b5cf6",
         },
         get().edges
       ),
     });
   },
 
-  // Add a new node
   addNode: (type) => {
     const newNodeId = `${type}-${get().nodes.length + 1}`;
     const newNode = {
@@ -56,8 +42,8 @@ export const useStore = create((set, get) => ({
       },
       data: {},
     };
-    set({
-      nodes: [...get().nodes, newNode],
-    });
+    set((state) => ({
+      nodes: [...state.nodes, newNode],
+    }));
   },
 }));

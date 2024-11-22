@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Position } from "reactflow";
-import NodeWrapper from "./node-wrapper";
 import Node from "./node";
+import { Handle } from "reactflow";
 
-
-// Specific Node Implementations
 export const SearchNode = ({ id, data }) => {
   const [query, setQuery] = useState(data?.query || "");
   return (
@@ -141,4 +139,166 @@ export const AIAssistantNode = ({ id, data }) => {
   );
 };
 
-export default NodeWrapper;
+export const InputNode = ({ id, data }) => {
+  const [inputName, setInputName] = useState(data?.inputName || id.replace("customInput-", "input_"));
+  const [inputType, setInputType] = useState(data?.inputType || "Text");
+
+  return (
+    <Node
+      id={id}
+      type="input"
+      title="Input"
+      handles={[{ type: "source", position: Position.Right, suffix: "value" }]}
+      fields={[
+        {
+          label: "Name:",
+          type: "text",
+          defaultValue: inputName,
+          onChange: (e) => setInputName(e.target.value),
+        },
+        {
+          label: "Type:",
+          type: "dropdown",
+          defaultValue: inputType,
+          options: ["Text", "File"],
+          onChange: (e) => setInputType(e.target.value),
+        },
+      ]}
+    />
+  );
+};
+
+export const LLMNode = ({ id, data }) => {
+  return (
+    <Node
+      id={id}
+      type="llm"
+      title="LLM"
+      handles={[
+        { type: "target", position: Position.Left, suffix: "system", style: { top: "33%" } },
+        { type: "target", position: Position.Left, suffix: "prompt", style: { top: "66%" } },
+        { type: "source", position: Position.Right, suffix: "response" },
+      ]}
+      fields={[
+        {
+          label: "Info:",
+          type: "text",
+          defaultValue: "This is an LLM.",
+          readOnly: true,
+        },
+      ]}
+    />
+  );
+};
+
+export const OutputNode = ({ id, data }) => {
+  const [outputName, setOutputName] = useState(data?.outputName || id.replace("customOutput-", "output_"));
+  const [outputType, setOutputType] = useState(data?.outputType || "Text");
+
+  return (
+    <Node
+      id={id}
+      type="output"
+      title="Output"
+      handles={[{ type: "target", position: Position.Left, suffix: "value" }]}
+      fields={[
+        {
+          label: "Name:",
+          type: "text",
+          defaultValue: outputName,
+          onChange: (e) => setOutputName(e.target.value),
+        },
+        {
+          label: "Type:",
+          type: "dropdown",
+          defaultValue: outputType,
+          options: ["Text", "File"],
+          onChange: (e) => setOutputType(e.target.value),
+        },
+      ]}
+    />
+  );
+};
+
+export const TextNode = ({ id, data }) => {
+  const [text, setText] = useState(data.text || "");
+  const [handles, setHandles] = useState([]);
+  const [dimensions, setDimensions] = useState({ width: 200, height: 50 });
+
+  // Function to dynamically resize the TextNode
+  const updateDimensions = (newText) => {
+    const lines = newText.split("\n").length;
+    const longestLine = Math.max(...newText.split("\n").map((line) => line.length));
+    setDimensions({
+      width: Math.max(200, longestLine * 8), // Adjust width based on characters
+      height: Math.max(50, lines * 20), // Adjust height based on lines
+    });
+  };
+
+  // Function to extract variables in {{variable}} format
+  const extractVariables = (input) => {
+    const regex = /{{\s*([a-zA-Z_$][a-zA-Z_$0-9]*)\s*}}/g;
+    const variables = [];
+    let match;
+    while ((match = regex.exec(input)) !== null) {
+      variables.push(match[1]);
+    }
+    return variables;
+  };
+
+  // Update handles whenever text changes
+  useEffect(() => {
+    const variables = extractVariables(text);
+    const uniqueHandles = [...new Set(variables)]; // Avoid duplicates
+    setHandles(uniqueHandles);
+    updateDimensions(text);
+  }, [text]);
+
+  return (
+    <div
+    >
+      {/* {handles.map((variable, index) => (
+        <Handle
+          key={index}
+          type="target"
+          position={Position.Left}
+          id={`handle-${variable}`}
+          style={{
+            top: `${(index + 1) * 30}px`,
+            background: "#8b5cf6",
+            borderRadius: "50%",
+          }}
+        />
+      ))}
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Enter your text here..."
+        style={{
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          border: "none",
+          outline: "none",
+          resize: "none",
+          fontSize: "14px",
+        }}
+      /> */}
+
+<Node 
+    id={id}
+    type={'text'}
+    title= {'Text'}
+    handles= {handles.map((h, index)=>{return {type:"target", position:Position.Left, suffix:"value"}})}
+    fields={[{
+      label:"Enter the text",
+      type: "textarea",
+      defaultValue:"Enter the text",
+      onChange:(e)=>{setText(e.target.value)}
+    }]}
+    />
+    </div>
+  );
+};
+
+
