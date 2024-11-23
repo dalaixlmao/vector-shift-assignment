@@ -1,4 +1,6 @@
 # VectorShift - Frontend Technical Assessment
+**Frontend Deployed Link**: https://vector-shift-assignment-mu.vercel.app/
+**Backend Deployed Link**: https://vectorshift-backend.ddns.net
 
 ## Overview
 
