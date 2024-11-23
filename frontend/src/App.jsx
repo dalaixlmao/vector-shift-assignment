@@ -22,7 +22,7 @@ function App() {
 
     // Send nodes and edges data to the backend for validation
     const res = await axios.post(
-      "http://15.207.110.211/",
+      "https://vectorshift-backend.ddns.net/",
       { nodes, edges }
     );
     console.log(res.data); // Debug: Output backend response
