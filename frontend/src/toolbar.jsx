@@ -21,10 +21,13 @@ export const PipelineToolbar = () => {
   return (
     <div className="absolute top-5 left-5 z-10 flex gap-4">
       <div
-        onClick={() => {
-          setOpen(!open);
+        onMouseEnter={() => {
+          setOpen(true);
         }}
-        className="cursor-pointer hover:bg-white/10 hover:border border hover:backdrop-blur px-3 py-2 transition-all rounded-xl text-white flex flex-row items-center"
+        onMouseLeave={() => {
+          setOpen(false);
+        }}
+        className="cursor-pointer hover:text-violet-500 hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl text-white flex flex-row items-center"
       >
         Select node type{" "}
         <div className={"ml-2"}>
@@ -36,12 +39,20 @@ export const PipelineToolbar = () => {
         </div>
       </div>
       {open && (
-        <div className="w-full flex flex-col backdrop-blur-sm items-start rounded-xl text-white px-2 py-1 absolute top-10 left-10 bg-white/10 border border-white/30">
+        <div
+          onMouseEnter={() => {
+            setOpen(true);
+          }}
+          onMouseLeave={() => {
+            setOpen(false);
+          }}
+          className="w-full bg-gradient-to-t from-indigo-950 py-3 to-black flex flex-col backdrop-blur-sm items-start rounded-xl text-white px-2 py-1 absolute top-10 left-10 bg-white/10 border border-t-blue-500/50 border-b-[1px] border-b-white/30 border-x-violet-500/50"
+        >
           {nodeTypes.map((type) => (
             <button
               key={type}
               onClick={() => addNode(type)}
-              className="hover:bg-white/10 rounded-lg w-full text-left px-2 py-1 text-xs font-light hover:backdrop-blur"
+              className="hover:bg-white/10 rounded-lg w-full text-left px-3 py-2 transition-all duration-100 text-xs font-light hover:backdrop-blur"
             >
               Add{" "}
               {type.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}{" "}
