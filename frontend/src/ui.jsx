@@ -71,12 +71,12 @@ export function Input({ type, options, onChange, defaultValue, label }) {
 
   if (type === "dropdown") {
     return (
-      <div>
-        <label className="block text-sm font-medium">{label}</label>
+      <div className="w-full">
+        <label className="block w-full text-sm font-medium">{label}</label>
         <select
           value={defaultValue}
           onChange={onChange}
-          className="mt-2 py-1 bg-white/10 text-sm placeholder:text-white/30 w-full rounded-md"
+          className="px-2 mt-2 py-1 bg-white/10 text-sm placeholder:text-white/30 w-full rounded-md"
         >
           {options.map((option, index) => (
             <option key={index} className="text-black">

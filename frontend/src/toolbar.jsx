@@ -27,7 +27,7 @@ export const PipelineToolbar = () => {
         onMouseLeave={() => {
           setOpen(false);
         }}
-        className="cursor-pointer hover:text-violet-500 hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl text-white flex flex-row items-center"
+        className={"text-sm cursor-pointer "+ (open?"text-violet-500 ":"text-white") + " hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl flex flex-row items-center"}
       >
         Select node type{" "}
         <div className={"ml-2"}>
@@ -46,7 +46,7 @@ export const PipelineToolbar = () => {
           onMouseLeave={() => {
             setOpen(false);
           }}
-          className="w-full bg-gradient-to-t from-indigo-950 py-3 to-black flex flex-col backdrop-blur-sm items-start rounded-xl text-white px-2 py-1 absolute top-10 left-10 bg-white/10 border border-t-blue-500/50 border-b-[1px] border-b-white/30 border-x-violet-500/50"
+          className="w-full bg-gradient-to-t from-indigo-950 py-3 to-black flex flex-col backdrop-blur-sm items-start rounded-xl text-white px-2 py-1 absolute top-8 left-10 bg-white/10 border border-t-blue-500/50 border-b-[1px] border-b-white/30 border-x-violet-500/50"
         >
           {nodeTypes.map((type) => (
             <button

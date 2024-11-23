@@ -14,7 +14,7 @@ function App() {
     console.log(res.data);
   }
   return (
-    <div className="w-screen bg-black">
+    <div className="w-screen bg-gradient-to-b from-indigo-950 to-black">
       <PipelineToolbar />
       <PipelineUI setNodes={setNodes} setEdges={setEdges}/>
       <SubmitButton onClick={onClick}/>
