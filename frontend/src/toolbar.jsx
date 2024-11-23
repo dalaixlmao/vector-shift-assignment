@@ -43,7 +43,7 @@ export const PipelineToolbar = () => {
         className={
           "text-sm font-semibold cursor-pointer " + 
           (open ? "text-violet-400 " : "text-white") + 
-          " hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl flex flex-row items-center"
+          " hover:border border border-transparent px-3 py-2 transition-all rounded-xl flex flex-row items-center"
         }
       >
         {/* Dropdown label and icon */}
