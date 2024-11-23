@@ -2,120 +2,151 @@ import React, { useState, useEffect } from "react";
 import { Position } from "reactflow";
 import Node from "./node";
 
+// Reusable constants
+const positions = {
+  left: Position.Left,
+  right: Position.Right,
+};
+
+const dropdownOptions = {
+  languages: ["Python", "JavaScript", "Rust"],
+  levels: ["Basic", "Intermediate", "Advanced"],
+  chartTypes: ["Bar", "Line", "Pie"],
+  inputTypes: ["Text", "File"],
+  assistantTypes: ["General", "Coding", "Creative"],
+  translationLanguages: ["English", "Spanish", "French"],
+};
+
+// Reusable field creation utility
+const createField = (label, type, defaultValue, options, onChange, readOnly = false) => ({
+  label,
+  type,
+  defaultValue,
+  options,
+  onChange,
+  readOnly,
+});
+
+// SearchNode Component
 export const SearchNode = ({ id, data }) => {
   const [query, setQuery] = useState(data?.query || "");
+
   return (
     <Node
       id={id}
       type="search"
       title="Web Search"
       handles={[
-        { type: "target", position: Position.Left, suffix: "query" },
-        { type: "source", position: Position.Right, suffix: "results" },
+        { type: "target", position: positions.left, suffix: "query" },
+        { type: "source", position: positions.right, suffix: "results" },
       ]}
       fields={[
-        {
-          label: "Search Query:",
-          type: "text",
-          defaultValue: query,
-          onChange: (e) => setQuery(e.target.value),
-        },
+        createField("Search Query:", "text", query, null, (e) => setQuery(e.target.value)),
       ]}
     />
   );
 };
 
+// TranslationNode Component
 export const TranslationNode = ({ id, data }) => {
-  const [sourceLanguage, setSourceLanguage] = useState(
-    data?.sourceLanguage || "English"
-  );
-  const [targetLanguage, setTargetLanguage] = useState(
-    data?.targetLanguage || "Spanish"
-  );
+  const [sourceLanguage, setSourceLanguage] = useState(data?.sourceLanguage || "English");
+  const [targetLanguage, setTargetLanguage] = useState(data?.targetLanguage || "Spanish");
+
   return (
     <Node
       id={id}
       type="translation"
       title="Language Translation"
       handles={[
-        { type: "target", position: Position.Left, suffix: "input-text" },
-        { type: "source", position: Position.Right, suffix: "translated-text" },
+        { type: "target", position: positions.left, suffix: "input-text" },
+        { type: "source", position: positions.right, suffix: "translated-text" },
       ]}
       fields={[
-        {
-          label: "Primary Language",
-          type: "dropdown",
-          defaultValue: sourceLanguage,
-          options: ["English", "Spanish", "French"],
-          onChange: (e) => setSourceLanguage(e.target.value),
-        },
-        {
-          label: "Translated Language",
-          type: "dropdown",
-          defaultValue: targetLanguage,
-          options: ["Spanish", "English", "French"],
-          onChange: (e) => setTargetLanguage(e.target.value),
-        },
+        createField(
+          "Primary Language",
+          "dropdown",
+          sourceLanguage,
+          dropdownOptions.translationLanguages,
+          (e) => setSourceLanguage(e.target.value)
+        ),
+        createField(
+          "Translated Language",
+          "dropdown",
+          targetLanguage,
+          dropdownOptions.translationLanguages,
+          (e) => setTargetLanguage(e.target.value)
+        ),
       ]}
     />
   );
 };
 
+// CodeGenerationNode Component
 export const CodeGenerationNode = ({ id, data }) => {
   const [language, setLanguage] = useState(data?.language || "Python");
   const [complexity, setComplexity] = useState(data?.complexity || "Basic");
+
   return (
     <Node
       id={id}
       type="code-generation"
       title="Code Generator"
       handles={[
-        { type: "target", position: Position.Left, suffix: "prompt" },
-        { type: "source", position: Position.Right, suffix: "generated-code" },
+        { type: "target", position: positions.left, suffix: "prompt" },
+        { type: "source", position: positions.right, suffix: "generated-code" },
       ]}
       fields={[
-        {
-          label: "Languages:",
-          type: "dropdown",
-          defaultValue: language,
-          options: ["Python", "JavaScript", "Rust"],
-          onChange: (e) => setLanguage(e.target.value),
-        },
-        {
-          label: "Level:",
-          type: "dropdown",
-          defaultValue: complexity,
-          options: ["Basic", "Intermediate", "Advanced"],
-          onChange: (e) => setComplexity(e.target.value),
-        },
+        createField("Languages:", "dropdown", language, dropdownOptions.languages, (e) => setLanguage(e.target.value)),
+        createField("Level:", "dropdown", complexity, dropdownOptions.levels, (e) => setComplexity(e.target.value)),
       ]}
     />
   );
 };
 
+// DataVisualizationNode Component
 export const DataVisualizationNode = ({ id, data }) => {
   const [chartType, setChartType] = useState(data?.chartType || "Bar");
+
   return (
     <Node
       id={id}
       type="data-visualization"
       title="Data Visualizer"
       handles={[
-        { type: "target", position: Position.Left, suffix: "input-data" },
-        { type: "source", position: Position.Right, suffix: "visualization" },
+        { type: "target", position: positions.left, suffix: "input-data" },
+        { type: "source", position: positions.right, suffix: "visualization" },
       ]}
       fields={[
-        {
-          label: "Chart Type:",
-          type: "dropdown",
-          defaultValue: chartType,
-          options: ["Bar", "Line", "Pie"],
-          onChange: (e) => setChartType(e.target.value),
-        },
+        createField(
+          "Chart Type:",
+          "dropdown",
+          chartType,
+          dropdownOptions.chartTypes,
+          (e) => setChartType(e.target.value)
+        ),
       ]}
     />
   );
 };
+
+export const LLMNode = ({ id, data }) => {
+  return (
+    <Node
+      id={id}
+      type="llm"
+      title="LLM"
+      handles={[
+        { type: "target", position: Position.Left, suffix: "system" },
+        { type: "target", position: Position.Left, suffix: "prompt" },
+        { type: "source", position: Position.Right, suffix: "response" },
+      ]}
+      fields={[
+        { label: "Info:", type: "text", defaultValue: "This is an LLM.", readOnly: true },
+      ]}
+    />
+  );
+};
+
 
 export const AIAssistantNode = ({ id, data }) => {
   const [assistantType, setAssistantType] = useState(
@@ -144,150 +175,72 @@ export const AIAssistantNode = ({ id, data }) => {
   );
 };
 
-export const InputNode = ({ id, data }) => {
-  const [inputName, setInputName] = useState(
-    data?.inputName || id.replace("customInput-", "input_")
-  );
-  const [inputType, setInputType] = useState(data?.inputType || "Text");
+
+
+
+// Reusable Input/Output Node Components
+const InputOutputNode = ({ id, data, type, title, handles, defaultName, defaultType }) => {
+  const [name, setName] = useState(data?.name || id.replace(defaultName, "name_"));
+  const [inputType, setInputType] = useState(data?.type || defaultType);
 
   return (
     <Node
       id={id}
-      type="input"
-      title="Input"
-      handles={[{ type: "source", position: Position.Right, suffix: "value" }]}
+      type={type}
+      title={title}
+      handles={handles}
       fields={[
-        {
-          label: "Name:",
-          type: "text",
-          defaultValue: inputName,
-          onChange: (e) => setInputName(e.target.value),
-        },
-        {
-          label: "Type:",
-          type: "dropdown",
-          defaultValue: inputType,
-          options: ["Text", "File"],
-          onChange: (e) => setInputType(e.target.value),
-        },
+        createField("Name:", "text", name, null, (e) => setName(e.target.value)),
+        createField("Type:", "dropdown", inputType, dropdownOptions.inputTypes, (e) => setInputType(e.target.value)),
       ]}
     />
   );
 };
 
-export const LLMNode = ({ id, data }) => {
-  return (
-    <Node
-      id={id}
-      type="llm"
-      title="LLM"
-      handles={[
-        {
-          type: "target",
-          position: Position.Left,
-          suffix: "system",
-          style: { top: "33%" },
-        },
-        {
-          type: "target",
-          position: Position.Left,
-          suffix: "prompt",
-          style: { top: "66%" },
-        },
-        { type: "source", position: Position.Right, suffix: "response" },
-      ]}
-      fields={[
-        {
-          label: "Info:",
-          type: "text",
-          defaultValue: "This is an LLM.",
-          readOnly: true,
-        },
-      ]}
-    />
-  );
-};
+export const InputNode = (props) => (
+  <InputOutputNode
+    {...props}
+    type="input"
+    title="Input"
+    handles={[{ type: "source", position: positions.right, suffix: "value" }]}
+    defaultName="customInput-"
+    defaultType="Text"
+  />
+);
 
-export const OutputNode = ({ id, data }) => {
-  const [outputName, setOutputName] = useState(
-    data?.outputName || id.replace("customOutput-", "output_")
-  );
-  const [outputType, setOutputType] = useState(data?.outputType || "Text");
+export const OutputNode = (props) => (
+  <InputOutputNode
+    {...props}
+    type="output"
+    title="Output"
+    handles={[{ type: "target", position: positions.left, suffix: "value" }]}
+    defaultName="customOutput-"
+    defaultType="Text"
+  />
+);
 
-  return (
-    <Node
-      id={id}
-      type="output"
-      title="Output"
-      handles={[{ type: "target", position: Position.Left, suffix: "value" }]}
-      fields={[
-        {
-          label: "Name:",
-          type: "text",
-          defaultValue: outputName,
-          onChange: (e) => setOutputName(e.target.value),
-        },
-        {
-          label: "Type:",
-          type: "dropdown",
-          defaultValue: outputType,
-          options: ["Text", "File"],
-          onChange: (e) => setOutputType(e.target.value),
-        },
-      ]}
-    />
-  );
-};
-
+// TextNode Component
 export const TextNode = ({ id, data }) => {
-  const [text, setText] = useState(data.text || "");
+  const [text, setText] = useState(data?.text || "");
   const [handles, setHandles] = useState([]);
-  const [dimensions, setDimensions] = useState({ width: 200, height: 50 });
-  const updateDimensions = (newText) => {
-    const lines = newText.split("\n").length;
-    const longestLine = Math.max(
-      ...newText.split("\n").map((line) => line.length)
-    );
-    setDimensions({
-      width: Math.max(200, longestLine * 8), 
-      height: Math.max(50, lines * 20), 
-    });
-  };
 
-  const extractVariables = (input) => {
-    const regex = /{{\s*([a-zA-Z_$][a-zA-Z_$0-9]*)\s*}}/g;
-    const variables = [];
-    let match;
-    while ((match = regex.exec(input)) !== null) {
-      variables.push(match[1]);
-    }
-    return variables;
+  const updateHandlesAndDimensions = (newText) => {
+    const variables = [...new Set(newText.match(/{{\s*([\w$]+)\s*}}/g)?.map((v) => v.slice(2, -2)) || [])];
+    setHandles(variables.map((varName) => ({ type: "target", position: positions.left, suffix: varName })));
   };
 
   useEffect(() => {
-    const variables = extractVariables(text);
-    const uniqueHandles = [...new Set(variables)]; 
-    setHandles(uniqueHandles);
-    updateDimensions(text);
+    updateHandlesAndDimensions(text);
   }, [text]);
 
   return (
     <Node
       id={id}
-      type={"text"}
-      title={"Text"}
-      handles={handles.map((h, index) => {
-        return { type: "target", position: Position.Left, suffix: "value" };
-      })}
+      type="text"
+      title="Text"
+      handles={handles}
       fields={[
-        {
-          label: "Enter the text",
-          type: "textarea",
-          defaultValue: "Enter the text",
-          onChange: (e) => {
-            setText(e.target.value);
-          },
-        },
+        createField("Enter the text", "textarea", text, null, (e) => setText(e.target.value)),
       ]}
     />
   );

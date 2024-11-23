@@ -27,7 +27,7 @@ export const PipelineToolbar = () => {
         onMouseLeave={() => {
           setOpen(false);
         }}
-        className={"text-sm cursor-pointer "+ (open?"text-violet-500 ":"text-white") + " hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl flex flex-row items-center"}
+        className={"text-sm font-semibold cursor-pointer "+ (open?"text-violet-400 ":"text-white") + " hover:border border border-transparent hover:backdrop-blur px-3 py-2 transition-all rounded-xl flex flex-row items-center"}
       >
         Select node type{" "}
         <div className={"ml-2"}>
@@ -52,7 +52,7 @@ export const PipelineToolbar = () => {
             <button
               key={type}
               onClick={() => addNode(type)}
-              className="hover:bg-white/10 rounded-lg w-full text-left px-3 py-2 transition-all duration-100 text-xs font-light hover:backdrop-blur"
+              className="text-violet-200 font-semibold hover:bg-white/10 rounded-lg w-full text-left px-3 py-2 transition-all duration-100 text-xs font-light hover:backdrop-blur"
             >
               Add{" "}
               {type.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}{" "}

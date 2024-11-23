@@ -76,7 +76,7 @@ export function Input({ type, options, onChange, defaultValue, label }) {
         <select
           value={defaultValue}
           onChange={onChange}
-          className="px-2 mt-2 py-1 bg-white/10 text-sm placeholder:text-white/30 w-full rounded-md"
+          className=" mt-2 py-1 bg-white/10 text-sm placeholder:text-white/30 w-full rounded-md"
         >
           {options.map((option, index) => (
             <option key={index} className="text-black">
