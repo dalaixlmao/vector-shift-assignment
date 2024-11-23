@@ -1,3 +1,7 @@
+// ui.jsx
+// Provides the main React Flow canvas for node and edge management.
+// Purpose: Enables interactive graph editing and visualization.
+
 import { useEffect } from "react";
 import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "./store";
@@ -10,7 +14,7 @@ import {
   LLMNode,
   InputNode,
   TextNode,
-  OutputNode
+  OutputNode,
 } from "./components/repo";
 import "reactflow/dist/style.css";
 import { ConnectionLineType, BackgroundVariant } from "reactflow";
@@ -30,13 +34,10 @@ const nodeTypes = {
 export const PipelineUI = ({ setNodes, setEdges }) => {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore();
 
+  // Update the parent component whenever nodes or edges change
   useEffect(() => {
-    setNodes(
-      nodes.map((node) => node.id)
-    );
-    setEdges(
-      edges.map((edge) => [edge.source, edge.target])
-    );
+    setNodes(nodes.map((node) => node.id));
+    setEdges(edges.map((edge) => [edge.source, edge.target]));
   }, [nodes, edges, setNodes, setEdges]);
 
   return (
@@ -65,7 +66,7 @@ export function Input({ type, options, onChange, defaultValue, label }) {
     textarea.style.height = `${textarea.scrollHeight}px`;
     const lines = textarea.value.split("\n");
     const longestLine = Math.max(...lines.map((line) => line.length));
-    const charWidth = 7.5; 
+    const charWidth = 7.5;
     textarea.style.width = `${Math.max(200, longestLine * charWidth)}px`;
   };
 
@@ -100,7 +101,7 @@ export function Input({ type, options, onChange, defaultValue, label }) {
           }}
           onInput={handleTextareaResize}
           className="mt-2 py-1 max-h-48 max-w-48 border border-transparent bg-white/10 px-2 text-sm placeholder:text-white/30 w-full rounded-md"
-          rows={1} 
+          rows={1}
           style={{
             resize: "none",
             overflow: "hidden",

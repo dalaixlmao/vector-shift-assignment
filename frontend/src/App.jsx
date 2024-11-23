@@ -1,3 +1,9 @@
+// App.jsx
+// Main application component that integrates the pipeline UI, toolbar, and submit button.
+// Purpose: Handles the user interface for pipeline creation and submission.
+// Dependencies: React, axios, PipelineToolbar, PipelineUI, SubmitButton.
+
+
 import { PipelineToolbar } from "./toolbar";
 import { PipelineUI } from "./ui";
 import { SubmitButton } from "./submit";
@@ -5,16 +11,23 @@ import { useState } from "react";
 import axios from "axios";
 
 function App() {
+  // State to manage the nodes and edges of the pipeline
   const [nodes, setNodes] = useState();
   const [edges, setEdges] = useState();
+
+  // Function to handle submission of the pipeline data
   async function onClick() {
     console.log("Nodes = ", nodes);
     console.log("Edges = ", edges);
+
+    // Send nodes and edges data to the backend for validation
     const res = await axios.post(
       "https://vector-shift-assignment-7v8l.vercel.app/pipelines/parse",
       { nodes, edges }
     );
-    console.log(res.data);
+    console.log(res.data); // Debug: Output backend response
+
+    // Alert box for responding on submit
     alert(
       res.data.is_dag === true
         ? `DAG exists with number of nodes=${res.data.num_nodes} and number of edges=${res.data.num_edges}`
