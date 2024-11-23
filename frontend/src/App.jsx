@@ -22,7 +22,7 @@ function App() {
 
     // Send nodes and edges data to the backend for validation
     const res = await axios.post(
-      "https://vector-shift-assignment-7v8l.vercel.app/pipelines/parse",
+      "http://15.207.110.211/",
       { nodes, edges }
     );
     console.log(res.data); // Debug: Output backend response
